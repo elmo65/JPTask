@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Threading;
 
@@ -8,6 +8,12 @@ namespace JPTask01
     {
         static void Main(string[] args)
         {
+            for(int i = 0; i < args.Length; ++i) {
+                Console.WriteLine(i + ": "+ args[i]);
+                if (args[i] == "-h") {
+                    Console.WriteLine("Tee metodi, joka näyttää helppiä, jos pyydetään (-h) tai annetaan vääriä tai puutteellisia parameterja.");
+                }
+            }
             RunCMD();
         }
 
@@ -25,6 +31,7 @@ namespace JPTask01
             int i = 0;
             while (i < 5)
             {
+                // kerää tiedostot listaan ja käy sitä läpi -> tarvitaan vain yksi Thread.Sleep
                 process.StandardInput.WriteLine(@"C:\Users\TeemuPC\Pictures\test1.png");
                 Thread.Sleep(5000);     //this is how I got waiting working, but I think I have read somewhere Thread.Sleep() is not good practice??
                 process.StandardInput.WriteLine(@"taskkill /F /IM Microsoft.Photos.exe");
