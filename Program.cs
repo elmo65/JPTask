@@ -7,29 +7,17 @@ namespace JPTask01
 {
     class Program
     {
-        static String message = @"Tee metodi, joka näyttää helppiä, jos pyydetään (-h) tai annetaan vääriä tai puutteellisia parameterja.
-        args on taulukko komentoriviparametreja.
-        Käytä Directory.EnumerateFiles tiedostojen hakuun annetusta hakemistosta
-        https://docs.microsoft.com/en-us/dotnet/api/system.io.directory.enumeratefiles?view=net-5.0#System_IO_Directory_EnumerateFiles_System_String_System_String_System_IO_SearchOption_
-        ";
-
-        static String directory;
-        static String configFile;
 
         static void Main(string[] args)
         {
-
-            for (int i = 0; i < args.Length; ++i)
+            Config config;
+            try 
             {
-                Console.WriteLine(i + ": " + args[i]);
-                if (args[i] == "-h")
-                {
-                    Console.WriteLine(message);
-                    Environment.Exit(1);
-                }
+                config = Config.ParseParameters(args);
             }
-            if (String.IsNullOrWhiteSpace(directory) && String.IsNullOrWhiteSpace(configFile)) {
-                Console.WriteLine("Komentoriviparametrit puuttuu !");
+            catch (ConfigException e) 
+            {
+                Console.WriteLine(e.Message);
                 Environment.Exit(1);
             }
             RunCMD();
