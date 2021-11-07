@@ -2,40 +2,48 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
-
+using JPTask01.Configuration;   // Configuration is in its own namespace
 namespace JPTask01
 {
     class Program
     {
-        static String message = @"Tee metodi, joka näyttää helppiä, jos pyydetään (-h) tai annetaan vääriä tai puutteellisia parameterja.
-        args on taulukko komentoriviparametreja.
-        Käytä Directory.EnumerateFiles tiedostojen hakuun annetusta hakemistosta
-        https://docs.microsoft.com/en-us/dotnet/api/system.io.directory.enumeratefiles?view=net-5.0#System_IO_Directory_EnumerateFiles_System_String_System_String_System_IO_SearchOption_
-        ";
 
-        static String directory;
-        static String configFile;
-
+        /*
+            To get help run: jptask.exe -h or jptask.exe --help.
+        */
         static void Main(string[] args)
         {
-
-            for (int i = 0; i < args.Length; ++i)
+            Config config;
+            try 
             {
-                Console.WriteLine(i + ": " + args[i]);
-                if (args[i] == "-h")
-                {
-                    Console.WriteLine(message);
-                    Environment.Exit(1);
-                }
+                // Create valid configuration from command line parameters
+                config = Config.ParseParameters(args);
             }
-            if (String.IsNullOrWhiteSpace(directory) && String.IsNullOrWhiteSpace(configFile)) {
-                Console.WriteLine("Komentoriviparametrit puuttuu !");
+            catch (ConfigException e) 
+            {
+                Console.WriteLine(e.Message);
                 Environment.Exit(1);
             }
-            RunCMD();
+            // Here we know, that configuration is usable
+            
+            /*
+                We create a Program object and run a instance method.
+                In this way we can add (non static) fields to Program class and
+                use them in the methods. This is a bit more object oriented
+                programming style and the using static methods is a more
+                procedural style.
+
+                Not necessary, but I like this style more. 
+                Also statics are a bit bad, because the way their memory is reserved
+                at the application startup time and never relinguished (before
+                application shutdown). In long running applications that may
+                be a factor. But in many times it really does not matter.
+            */
+            Program app = new Program();
+            app.RunCMD();
         }
 
-        private static void RunCMD()
+        private void RunCMD()
         {
 
             Process process = new Process();
